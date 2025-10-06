@@ -14,7 +14,7 @@ def holehe_lookup():
         return jsonify({"error": "Missing email parameter"}), 400
 
     try:
-        )
+        # run holhe
         result = subprocess.run(
             ["python3", "-m", "holehe", email, "--no-color"],
             capture_output=True,
