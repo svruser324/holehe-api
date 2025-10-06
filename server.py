@@ -3,36 +3,33 @@ import subprocess
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def home():
-    return "✅ Holehe API is running"
+    return jsonify({"status": "Holehe API is running ✅"})
 
-@app.route('/holehe')
+@app.route("/holehe")
 def holehe_lookup():
     email = request.args.get("email")
     if not email:
-        return jsonify({"error": "Missing email parameter"}), 400
+        return jsonify({"error": "Please provide an email parameter like ?email=someone@example.com"}), 400
 
     try:
         # run holhe
         result = subprocess.run(
-            ["python3", "-m", "holehe", email, "--no-color"],
+            ["holehe", email, "--no-color"],
             capture_output=True,
             text=True,
             timeout=60
         )
 
-        
-        output = (result.stdout + "\n" + result.stderr).strip()
-
+        output = result.stdout.strip()
         if not output:
-            return jsonify({"error": "No output from holehe"}), 500
+            output = result.stderr.strip() or "No output"
 
-        
         return jsonify({"output": output})
 
     except subprocess.TimeoutExpired:
-        return jsonify({"error": "Holehe timed out"}), 500
+        return jsonify({"error": "Holehe scan timed out"}), 504
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
