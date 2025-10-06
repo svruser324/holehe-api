@@ -15,7 +15,7 @@ def holehe_lookup():
         return jsonify({"error": "Missing email"}), 400
 
     try:
-        # Run holehe command (only used sites, JSON output)
+        
         result = subprocess.run(
             ["holehe", "--only-used", "--json", email],
             capture_output=True,
@@ -40,3 +40,4 @@ def holehe_lookup():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
