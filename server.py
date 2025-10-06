@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Holehe API running"
+    return "✅ Holehe API is running"
 
 @app.route('/holehe')
 def holehe_lookup():
@@ -14,17 +14,23 @@ def holehe_lookup():
         return jsonify({"error": "Missing email parameter"}), 400
 
     try:
-       
+        )
         result = subprocess.run(
-            ["python", "-m", "holehe", email, "--no-color"],
+            ["python3", "-m", "holehe", email, "--no-color"],
             capture_output=True,
             text=True,
             timeout=60
         )
-        output = result.stdout.strip()
+
+        
+        output = (result.stdout + "\n" + result.stderr).strip()
+
         if not output:
-            return jsonify({"error": "No output"}), 500
+            return jsonify({"error": "No output from holehe"}), 500
+
+        
         return jsonify({"output": output})
+
     except subprocess.TimeoutExpired:
         return jsonify({"error": "Holehe timed out"}), 500
     except Exception as e:
