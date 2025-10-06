@@ -1,3 +1,4 @@
-flask
-holehe
+Flask
 gunicorn
+holehe
+requests
